@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7-Segment Display Decoder</title>
+    <style>
+        .container {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            width: 230px;
+        }
+
+        .container3d {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            width: 350px;
+        }
+
+        .segment-vertical {
+            width: 15px;
+            height: 40px;
+            margin-left: 40px;
+            background-color: red;
+            display: inline-block;
+        }
+
+        .segment-horizontal {
+            width: 40px;
+            height: 15px;
+            margin-left: 57px;
+            background-color: red;
+            display: inline-block;
+        }
+
+        .off {
+            background-color: lightgray;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>7-Segment Display Decoder Demonstrations</h1>
+
+    <h2>1. ROM-Based 7-Segment Display Decoder</h2>
+    <p>This section demonstrates the use of ROM to control a 7-segment display.</p>
+    <label for="rom-input">Enter a hex value (0-15): </label>
+    <input type="number" id="rom-input" min="0" max="15" value="0">
+    <button onclick="updateROMDisplay()">Display</button>
+    <div id="rom-display">
+        <div class="segment-horizontal off" id="rom-seg-a"></div><br>
+        <div class="segment-vertical off" id="rom-seg-f"></div>
+        <div class="segment-vertical off" id="rom-seg-b"></div><br>
+        <div class="segment-horizontal off" id="rom-seg-g"></div><br>
+        <div class="segment-vertical off" id="rom-seg-e"></div>
+        <div class="segment-vertical off" id="rom-seg-c"></div><br>
+        <div class="segment-horizontal off" id="rom-seg-d"></div>
+    </div>
+
+    <h2>2. PLA-Based 7-Segment Display Decoder (2 Digits)</h2>
+    <p>This section demonstrates the use of PLA to control a 7-segment display for two digits.</p>
+    <label for="pla-2input">Enter a hex value (0-15): </label>
+    <input type="number" id="pla-2input" min="0" max="15" value="0">
+    <button onclick="updatePLA2Display()">Display</button>
+    <div class="container">
+        <div id="pla-display">
+            <div class="segment-horizontal off" id="pla-2seg-a1"></div><br>
+            <div class="segment-vertical off" id="pla-2seg-f1"></div>
+            <div class="segment-vertical off" id="pla-2seg-b1"></div><br>
+            <div class="segment-horizontal off" id="pla-2seg-g1"></div><br>
+            <div class="segment-vertical off" id="pla-2seg-e1"></div>
+            <div class="segment-vertical off" id="pla-2seg-c1"></div><br>
+            <div class="segment-horizontal off" id="pla-2seg-d1"></div>
+        </div>
+        <div id="pla-display-2">
+            <div class="segment-horizontal off" id="pla-2seg-a2"></div><br>
+            <div class="segment-vertical off" id="pla-2seg-f2"></div>
+            <div class="segment-vertical off" id="pla-2seg-b2"></div><br>
+            <div class="segment-horizontal off" id="pla-2seg-g2"></div><br>
+            <div class="segment-vertical off" id="pla-2seg-e2"></div>
+            <div class="segment-vertical off" id="pla-2seg-c2"></div><br>
+            <div class="segment-horizontal off" id="pla-2seg-d2"></div>
+        </div>
+    </div>
+
+    <h2>3. PLA-Based 7-Segment Display Decoder (3 Digits)</h2>
+    <p>This section demonstrates the use of PLA to control a 7-segment display for three digits.</p>
+    <label for="pla-3input">Enter a hex value (0-999): </label>
+    <input type="number" id="pla-3input" min="0" max="999" value="0">
+    <button onclick="updatePLA3Display()">Display</button>
+    <div class="container3d">
+        <div id="pla-display">
+            <div class="segment-horizontal off" id="pla-3seg-a1"></div><br>
+            <div class="segment-vertical off" id="pla-3seg-f1"></div>
+            <div class="segment-vertical off" id="pla-3seg-b1"></div><br>
+            <div class="segment-horizontal off" id="pla-3seg-g1"></div><br>
+            <div class="segment-vertical off" id="pla-3seg-e1"></div>
+            <div class="segment-vertical off" id="pla-3seg-c1"></div><br>
+            <div class="segment-horizontal off" id="pla-3seg-d1"></div>
+        </div>
+        <div id="pla-display-2">
+            <div class="segment-horizontal off" id="pla-3seg-a2"></div><br>
+            <div class="segment-vertical off" id="pla-3seg-f2"></div>
+            <div class="segment-vertical off" id="pla-3seg-b2"></div><br>
+            <div class="segment-horizontal off" id="pla-3seg-g2"></div><br>
+            <div class="segment-vertical off" id="pla-3seg-e2"></div>
+            <div class="segment-vertical off" id="pla-3seg-c2"></div><br>
+            <div class="segment-horizontal off" id="pla-3seg-d2"></div>
+        </div>
+        <div id="pla-display-3">
+            <div class="segment-horizontal off" id="pla-3seg-a3"></div><br>
+            <div class="segment-vertical off" id="pla-3seg-f3"></div>
+            <div class="segment-vertical off" id="pla-3seg-b3"></div><br>
+            <div class="segment-horizontal off" id="pla-3seg-g3"></div><br>
+            <div class="segment-vertical off" id="pla-3seg-e3"></div>
+            <div class="segment-vertical off" id="pla-3seg-c3"></div><br>
+            <div class="segment-horizontal off" id="pla-3seg-d3"></div>
+        </div>
+    </div>
+
+    <script>
+        const romData = {
+            0: '1111110',
+            1: '0110000',
+            2: '1101101',
+            3: '1111001',
+            4: '0110011',
+            5: '1011011',
+            6: '1011111',
+            7: '1110000',
+            8: '1111111',
+            9: '1111011',
+            10: '1110111',
+            11: '0011111',
+            12: '1001110',
+            13: '0111101',
+            14: '1001111',
+            15: '1000111'
+        };
+
+        function updateROMDisplay() {
+            const value = document.getElementById('rom-input').value;
+            const segments = romData[value].split('');
+            for (let i = 0; i < segments.length; i++) {
+                const segment = document.getElementById(`rom-seg-${String.fromCharCode(97 + i)}`);
+                if (segments[i] === '1') {
+                    segment.classList.remove('off');
+                } else {
+                    segment.classList.add('off');
+                }
+            }
+        }
+
+        const plaData = {
+            0: '1111110',
+            1: '0110000',
+            2: '1101101',
+            3: '1111001',
+            4: '0110011',
+            5: '1011011',
+            6: '1011111',
+            7: '1110000',
+            8: '1111111',
+            9: '1111011'
+        };
+
+        function updatePLA2Display() {
+            const value = document.getElementById('pla-2input').value;
+            const tens = Math.floor(value / 10);
+            const units = value % 10;
+            updatePLA2DisplaySegment(tens, 1);
+            updatePLA2DisplaySegment(units, 2);
+        }
+
+        function updatePLA3Display() {
+            const value = document.getElementById('pla-3input').value;
+            const hundreds = Math.floor(value / 100);
+            const tens = Math.floor((value % 100) / 10);
+            const units = value % 10;
+            updatePLA3DisplaySegment(hundreds, 1);
+            updatePLA3DisplaySegment(tens, 2);
+            updatePLA3DisplaySegment(units, 3);
+        }
+
+        function updatePLA2DisplaySegment(value, display) {
+            const segments = plaData[value].split('');
+            for (let i = 0; i < segments.length; i++) {
+                const segment = document.getElementById(`pla-2seg-${String.fromCharCode(97 + i)}${display}`);
+                if (segments[i] === '1') {
+                    segment.classList.remove('off');
+                } else {
+                    segment.classList.add('off');
+                }
+            }
+        }
+
+        function updatePLA3DisplaySegment(value, display) {
+            const segments = plaData[value].split('');
+            for (let i = 0; i < segments.length; i++) {
+                const segment = document.getElementById(`pla-3seg-${String.fromCharCode(97 + i)}${display}`);
+                if (segments[i] === '1') {
+                    segment.classList.remove('off');
+                } else {
+                    segment.classList.add('off');
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

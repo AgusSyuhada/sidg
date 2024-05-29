@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer with 7-Segment Display</title>
+    <style>
+        .container {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            width: 350px;
+        }
+
+        .segment-vertical {
+            width: 15px;
+            height: 40px;
+            margin-left: 40px;
+            background-color: red;
+            display: inline-block;
+        }
+
+        .segment-horizontal {
+            width: 40px;
+            height: 15px;
+            margin-left: 57px;
+            background-color: red;
+            display: inline-block;
+        }
+
+        .off {
+            background-color: lightgray;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>7-Segment Display Timer</h1>
+    <div class="container">
+        <div id="display-1">
+            <div class="segment-horizontal off" id="seg-a1"></div><br>
+            <div class="segment-vertical off" id="seg-f1"></div>
+            <div class="segment-vertical off" id="seg-b1"></div><br>
+            <div class="segment-horizontal off" id="seg-g1"></div><br>
+            <div class="segment-vertical off" id="seg-e1"></div>
+            <div class="segment-vertical off" id="seg-c1"></div><br>
+            <div class="segment-horizontal off" id="seg-d1"></div>
+        </div>
+        <div id="display-2">
+            <div class="segment-horizontal off" id="seg-a2"></div><br>
+            <div class="segment-vertical off" id="seg-f2"></div>
+            <div class="segment-vertical off" id="seg-b2"></div><br>
+            <div class="segment-horizontal off" id="seg-g2"></div><br>
+            <div class="segment-vertical off" id="seg-e2"></div>
+            <div class="segment-vertical off" id="seg-c2"></div><br>
+            <div class="segment-horizontal off" id="seg-d2"></div>
+        </div>
+    </div>
+
+    <button onclick="startTimer()">Play</button>
+    <button onclick="stopTimer()">Stop</button>
+    <button onclick="resetTimer()">Refresh</button>
+
+    <script>
+        const plaData = {
+            0: '1111110',
+            1: '0110000',
+            2: '1101101',
+            3: '1111001',
+            4: '0110011',
+            5: '1011011',
+            6: '1011111',
+            7: '1110000',
+            8: '1111111',
+            9: '1111011'
+        };
+
+        let timer;
+        let currentValue = 0;
+
+        function updateDisplay(value) {
+            const tens = Math.floor(value / 10);
+            const units = value % 10;
+            updateDisplaySegment(tens, 1);
+            updateDisplaySegment(units, 2);
+        }
+
+        function updateDisplaySegment(value, display) {
+            const segments = plaData[value].split('');
+            for (let i = 0; i < segments.length; i++) {
+                const segment = document.getElementById(`seg-${String.fromCharCode(97 + i)}${display}`);
+                if (segments[i] === '1') {
+                    segment.classList.remove('off');
+                } else {
+                    segment.classList.add('off');
+                }
+            }
+        }
+
+        function startTimer() {
+            if (timer) {
+                clearInterval(timer);
+            }
+            timer = setInterval(() => {
+                currentValue = (currentValue % 60) + 1;
+                updateDisplay(currentValue);
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timer);
+        }
+
+        function resetTimer() {
+            stopTimer();
+            currentValue = 0;
+            updateDisplay(currentValue);
+        }
+    </script>
+</body>
+
+</html>
